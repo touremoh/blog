@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tourem
+    username: tourem
+    password:
+
+
+
+logging:
+  level:
+    com:
+      tourem: DEBUG
+    root: INFO
