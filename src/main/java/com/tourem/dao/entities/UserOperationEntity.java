@@ -1,13 +1,11 @@
 package com.tourem.dao.entities;
 
-import com.google.common.base.Strings;
 import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 @Data

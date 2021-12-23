@@ -2,8 +2,9 @@ package com.tourem;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
+
+import static java.util.Objects.nonNull;
 
 public interface TouremObject extends Serializable {
     /**
@@ -45,6 +46,6 @@ public interface TouremObject extends Serializable {
      * @return true or false
      */
     default boolean hasId() {
-        return Objects.nonNull(this.getId());
+        return nonNull(this.getId());
     }
 }
