@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public abstract class AbstractTouremService<E extends TouremEntity, D extends TouremDto> implements TouremService<D> {
@@ -44,18 +45,68 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 */
 	@Override
 	public D findOne(Map<String, String> criteria) {
-		return null;
+		return this.repository
+				   .findOne(this.queryBuilder.buildQuerySpecification(criteria))
+				   .map(mapper::mapToDto)
+				   .orElseThrow(() -> new ResourceNotFoundException(String.format("Resource with criteria [%s] not found", criteria)));
 	}
 
 	/**
 	 * Create a new resource
-	 *
 	 * @param data resource information
 	 * @return returns the new resource created
 	 */
 	@Override
 	public D create(D data) {
-		return null;
+		// map to entity
+		E entity = mapper.mapToEntity(data);
+
+		// validate
+		applyPrePersistValidation(entity);
+
+		// pre persist
+		processBeforeCreate(entity);
+
+		// save
+		E result = this.repository.save(entity);
+
+		// post persist
+		processAfterCreate(result);
+
+		// map and return results
+		return mapper.mapToDto(result);
+	}
+
+	protected void applyPrePersistValidation(E entity) {
+		log.info("Pre persist validation of [{}]", entity);
+
+		if (entity.hasId()) {
+			log.info("Field id not allowed for create operation for object: [{}]", entity);
+			throw new IllegalArgumentException(String.format("Field id not allowed for create operation for object: [%s]", entity));
+		}
+
+		if (Objects.nonNull(entity.getCreatedAt())) {
+			log.info("Field createdAt not allowed for create operation for object: [{}]", entity);
+			throw new IllegalArgumentException(String.format("Field createdAt not allowed for create operation for object: [%s]", entity));
+		}
+
+		if (Objects.nonNull(entity.getUpdatedAt())) {
+			log.info("Field updatedAt not allowed for create operation for entity [{}]", entity);
+			throw new IllegalArgumentException(String.format("Field updatedAt not allowed for create operation for entity [%s]", entity));
+		}
+
+		if (Objects.nonNull(entity.getDeletedAt())) {
+			log.info("Field deletedAt not allowed for create operation for entity [{}]", entity);
+			throw new IllegalArgumentException(String.format("Field deletedAt not allowed for create operation for entity [%s]", entity));
+		}
+	}
+
+	protected void processBeforeCreate(E entity) {
+		log.info("Pre processing entity before create: [{}]", entity);
+	}
+
+	protected void processAfterCreate(E entity) {
+		log.info("Pre processing entity after create: [{}]", entity);
 	}
 
 	/**

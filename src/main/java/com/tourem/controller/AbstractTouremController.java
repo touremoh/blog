@@ -8,8 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,29 +34,28 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 
 	/**
 	 * Find one element using different criteria other than resource ID
-	 *
-	 * @param criteria request criteria to be foundx
+	 * @param criteria request criteria to be found
 	 * @return returns the found element
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<D>> findOne(Map<String, String> criteria) {
-		return null;
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<D>> findOne(@RequestParam Map<String, String> criteria) {
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.findOne(criteria), HttpStatus.OK.value()));
 	}
 
 	/**
 	 * Create a new resource
-	 *
 	 * @param data resource information
 	 * @return returns the new resource created
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<D>> create(D data) {
-		return null;
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<D>> create(@RequestBody D data) {
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.create(data), HttpStatus.CREATED.value()));
 	}
 
 	/**
 	 * Update one part of an element
-	 *
 	 * @param data update data
 	 * @return returns the newly updated resource
 	 */

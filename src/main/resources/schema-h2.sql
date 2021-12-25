@@ -5,10 +5,10 @@ set schema 'tourem';
 create table if not exists author
 (
   id         varchar(36) not null,
-  first_name varchar(50),
-  last_name  varchar(50),
-  login      varchar(50),
-  password   varchar(50),
+  first_name varchar(50) not null,
+  last_name  varchar(50) not null,
+  login      varchar(50) not null,
+  password   varchar(50) not null,
   created_at timestamp,
   updated_at timestamp,
   deleted_at timestamp,
@@ -92,3 +92,7 @@ alter table user_operation
 alter table article
   add foreign key (author_id)
     references author;
+alter table author
+  add constraint unique_author_login unique (login);
+alter table author
+  add constraint unique_author_passwd unique (password);
