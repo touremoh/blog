@@ -7,12 +7,11 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.sql.Clob;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
 @Entity
-@Table(name = "article")
+@Table(name = "article", schema = "tourem")
 public class ArticleEntity implements TouremEntity {
 
     @Serial
@@ -20,7 +19,7 @@ public class ArticleEntity implements TouremEntity {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private String id;
 
     @Column(name = "title")
     private String title;

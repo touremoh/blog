@@ -6,12 +6,11 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
 @Entity
-@Table(name = "image_url")
+@Table(name = "image_url", schema = "tourem")
 public class ImageUrlEntity implements TouremEntity {
 
     @Serial
@@ -19,7 +18,7 @@ public class ImageUrlEntity implements TouremEntity {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private String id;
 
     @Column(name = "url")
     private String url;

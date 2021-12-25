@@ -5,19 +5,18 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "author")
+@Table(name = "author", schema = "tourem")
 public class AuthorEntity implements TouremEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(generator = "UUID")
+    private String id;
 
     @Column(name = "first_name")
     private String firstName;

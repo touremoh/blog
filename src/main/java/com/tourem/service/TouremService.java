@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Interface for CRUD operations
@@ -19,7 +18,7 @@ public interface TouremService<D extends TouremDto> extends Serializable {
 	 * @param id ID of the element to be found
 	 * @return returns the found element
 	 */
-	D findById(UUID id);
+	D findById(String id);
 
 	/**
 	 * Find one element using different criteria other than resource ID
@@ -53,7 +52,7 @@ public interface TouremService<D extends TouremDto> extends Serializable {
 	 * Delete a resource by its ID
 	 * @param id ID of the resource to be deleted
 	 */
-	void delete(UUID id);
+	void delete(String id);
 
 	/**
 	 * Find many elements by criteria

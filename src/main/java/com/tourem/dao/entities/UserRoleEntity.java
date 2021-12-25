@@ -6,12 +6,11 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serial;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
 @Entity
-@Table(name = "user_role")
+@Table(name = "user_role", schema = "tourem")
 public class UserRoleEntity implements TouremEntity {
 
     @Serial
@@ -19,7 +18,7 @@ public class UserRoleEntity implements TouremEntity {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private String id;
 
     @Column(name = "name")
     private String name;

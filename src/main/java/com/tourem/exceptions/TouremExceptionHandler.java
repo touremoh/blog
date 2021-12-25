@@ -1,5 +1,6 @@
 package com.tourem.exceptions;
 
+import com.tourem.dto.TouremErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,24 +15,24 @@ import java.util.Map;
 public class TouremExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value = {MissingResourceException.class})
 	protected ResponseEntity<Object> handleMissingResource(RuntimeException e, WebRequest request) {
-		return createResponse("A mandatory resource is missing", HttpStatus.BAD_REQUEST);
+		return createResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(value = {ResourceNotFoundException.class})
 	protected ResponseEntity<Object> handleResourceNotFound(RuntimeException e, WebRequest request) {
-		return createResponse("The resource you are searching does not exist", HttpStatus.NOT_FOUND);
+		return createResponse(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(value = {IllegalArgumentException.class})
 	protected ResponseEntity<Object> handleIllegalArgument(RuntimeException e, WebRequest request) {
-		return createResponse("You are using an illegal resource", HttpStatus.NOT_ACCEPTABLE);
+		return createResponse(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	private ResponseEntity<Object> createResponse(String message, HttpStatus status) {
-		Map<String, String> errResponse = Map.of(
+		Map<String, String> response = Map.of(
 			"timestamp", LocalDateTime.now().toString(),
 			"message", message
 		);
-		return new ResponseEntity<>(errResponse, status);
+		return new ResponseEntity<>(new TouremErrorResponse<>(response, status.value()), status);
 	}
 }

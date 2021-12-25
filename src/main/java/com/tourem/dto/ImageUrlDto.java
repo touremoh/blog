@@ -4,12 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
 public class ImageUrlDto implements TouremDto {
-    private UUID id;
+    private String id;
     private String url;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

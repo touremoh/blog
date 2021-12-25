@@ -2,7 +2,6 @@ package com.tourem;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static java.util.Objects.nonNull;
 
@@ -11,7 +10,7 @@ public interface TouremObject extends Serializable {
      * Gets the ID of an entity
      * @return the ID of the entity
      */
-    UUID getId();
+    String getId();
 
     /**
      * Gets the date and time when the object was persisted in the db
