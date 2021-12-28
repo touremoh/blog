@@ -18,14 +18,14 @@ public interface TouremService<D extends TouremDto> extends Serializable {
 	 * @param id ID of the element to be found
 	 * @return returns the found element
 	 */
-	D findById(String id);
+	D find(String id);
 
 	/**
 	 * Find one element using different criteria other than resource ID
 	 * @param criteria request criteria to be found
 	 * @return returns the found element
 	 */
-	D findOne(Map<String, String> criteria);
+	D find(Map<String, String> criteria);
 
 	/**
 	 * Create a new resource

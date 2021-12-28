@@ -29,7 +29,7 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	@Override
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TouremApiResponse<D>> findById(@PathVariable String id) {
-		return ResponseEntity.ok(new TouremApiResponse<D>(this.service.findById(id), HttpStatus.OK.value()));
+		return ResponseEntity.ok(new TouremApiResponse<D>(this.service.find(id), HttpStatus.OK.value()));
 	}
 
 	/**
@@ -40,7 +40,7 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	@Override
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TouremApiResponse<D>> findOne(@RequestParam Map<String, String> criteria) {
-		return ResponseEntity.ok(new TouremApiResponse<>(this.service.findOne(criteria), HttpStatus.OK.value()));
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.find(criteria), HttpStatus.OK.value()));
 	}
 
 	/**
