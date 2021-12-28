@@ -137,7 +137,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	}
 
 	public void applyInitialCheckBeforePatch(E entity) {
-		log.info("Validation of [{}]", entity);
+		log.info("Validation of [{}] before PATCH", entity);
 
 		if (!entity.hasId()) {
 			log.debug("The ID of the object to update is missing - [{}]", entity);
@@ -171,7 +171,35 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 */
 	@Override
 	public D put(D data) {
-		return null;
+		// map to entity
+		E e = this.mapper.mapToEntity(data);
+
+		// initial check
+		applyInitialCheckBeforePut(e);
+
+		// process before put
+		processBeforePut(e);
+
+		// save
+		E res = this.repository.save(e);
+
+		// process after put
+		processAfterPut(res);
+
+		// map to dto and return
+		return this.mapper.mapToDto(res);
+	}
+
+	public void applyInitialCheckBeforePut(E entity) {
+		log.info("Validation of [{}] before PUT", entity);
+	}
+
+	protected void processBeforePut(E entity) {
+		log.info("Pre processing entity before put: [{}]", entity);
+	}
+
+	protected void processAfterPut(E entity) {
+		log.info("Pre processing entity after put: [{}]", entity);
 	}
 
 	/**
@@ -180,8 +208,24 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @param id ID of the resource to be deleted
 	 */
 	@Override
-	public void delete(String id) {
+	public boolean delete(String id) {
+		// check if ID exists before delete
+		if (!this.repository.existsById(id)) {
+			log.debug("Trying to remove a resource with an invalid ID: [{}]", id);
+			throw new IllegalArgumentException(String.format("The resource you are trying to remove does not exists [%s]", id));
+		}
 
+		// delete resource
+		this.repository.deleteById(id);
+
+		// check if the delete operation was successful
+		if (this.repository.existsById(id)) {
+			log.debug("The delete operation was not successful for resource with ID: [{}]", id);
+			throw new IllegalArgumentException(String.format("An error occurred during delete operation - Resource [%s] not deleted", id));
+		}
+
+		// return true if the operation was successful
+		return true;
 	}
 
 	/**

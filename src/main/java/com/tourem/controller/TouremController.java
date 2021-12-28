@@ -5,10 +5,9 @@ import com.tourem.dto.TouremDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
-import java.io.Serializable;
 import java.util.Map;
 
-public interface TouremController<D extends TouremDto> extends Serializable {
+public interface TouremController<D extends TouremDto> {
 	/**
 	 * Find one element by its ID
 	 * @param id ID of the element to be found
@@ -48,7 +47,7 @@ public interface TouremController<D extends TouremDto> extends Serializable {
 	 * Delete a resource by its ID
 	 * @param id ID of the resource to be deleted
 	 */
-	ResponseEntity<TouremApiResponse<Void>> delete(String id);
+	ResponseEntity<TouremApiResponse<String>> delete(String id);
 
 	/**
 	 * Find many elements by criteria

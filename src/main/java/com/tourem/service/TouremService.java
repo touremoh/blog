@@ -3,7 +3,6 @@ package com.tourem.service;
 import com.tourem.dto.TouremDto;
 import org.springframework.data.domain.Page;
 
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Map;
  * @param <D> DTO to be process
  * @author Mohamed Touré
  */
-public interface TouremService<D extends TouremDto> extends Serializable {
+public interface TouremService<D extends TouremDto> {
 
 	/**
 	 * Find one element by its ID
@@ -52,7 +51,7 @@ public interface TouremService<D extends TouremDto> extends Serializable {
 	 * Delete a resource by its ID
 	 * @param id ID of the resource to be deleted
 	 */
-	void delete(String id);
+	boolean delete(String id);
 
 	/**
 	 * Find many elements by criteria

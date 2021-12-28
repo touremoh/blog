@@ -4,12 +4,13 @@ import com.tourem.dao.entities.TouremEntity;
 import org.assertj.core.util.Strings;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
-public interface TouremQueryBuilder<E extends TouremEntity> {
+public interface TouremQueryBuilder<E extends TouremEntity> extends Serializable {
 
 	default String formatExpression(String expression) {
 		return MessageFormat.format("%{}%", expression);

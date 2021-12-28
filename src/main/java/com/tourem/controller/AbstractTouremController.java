@@ -29,7 +29,7 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	@Override
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TouremApiResponse<D>> findById(@PathVariable String id) {
-		return ResponseEntity.ok(new TouremApiResponse<D>(this.service.find(id), HttpStatus.OK.value()));
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.find(id), HttpStatus.OK.value()));
 	}
 
 	/**
@@ -81,7 +81,7 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	 * @param id ID of the resource to be deleted
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<Void>> delete(String id) {
+	public ResponseEntity<TouremApiResponse<String>> delete(String id) {
 		return null;
 	}
 
