@@ -1,5 +1,6 @@
 package com.tourem.service;
 
+import com.google.common.base.Strings;
 import com.tourem.dao.entities.TouremEntity;
 import com.tourem.dao.repositories.TouremRepository;
 import com.tourem.dao.specifications.TouremQueryBuilder;
@@ -8,6 +9,8 @@ import com.tourem.exceptions.ResourceNotFoundException;
 import com.tourem.mappers.TouremObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.Map;
 import java.util.Objects;
@@ -204,7 +207,6 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	/**
 	 * Delete a resource by its ID
-	 *
 	 * @param id ID of the resource to be deleted
 	 */
 	@Override
@@ -236,6 +238,34 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 */
 	@Override
 	public Page<D> findAll(Map<String, String> criteria) {
+		// build page request
+		var req = processBeforeFindAll(criteria);
+
+		// build query criteria
+		var querySpec = this.queryBuilder.buildQuerySpecification(criteria);
+
+		// run query and process results
+		return this.repository.findAll(querySpec, req).map(mapper::mapToDto);
+	}
+
+	public PageRequest processBeforeFindAll(Map<String, String> criteria) {
+		var size = criteria.get("size");
+		var page = criteria.get("page");
+		var sortBy = criteria.get("sortBy");
+		var sortDirection = criteria.get("sortDirection");
+
+		if (!Strings.isNullOrEmpty(size)) {
+			if (!Strings.isNullOrEmpty(page)) {
+				if (!Strings.isNullOrEmpty(sortBy) && !Strings.isNullOrEmpty(sortDirection)) {
+					var sort = sortDirection.equals("ASC")
+						? Sort.by(sortBy).ascending()
+						: Sort.by(sortBy).descending();
+					return PageRequest.of(Integer.parseInt(page), Integer.parseInt(size), sort);
+				}
+				return PageRequest.of(Integer.parseInt(page), Integer.parseInt(size));
+			}
+			return PageRequest.ofSize(Integer.parseInt(size));
+		}
 		return null;
 	}
 }
