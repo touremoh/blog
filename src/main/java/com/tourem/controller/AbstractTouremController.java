@@ -27,8 +27,8 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	 * @return returns the found element
 	 */
 	@Override
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TouremApiResponse<D>> findById(@PathVariable String id) {
+	@GetMapping(path = "/details/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<D>> find(@PathVariable String id) {
 		return ResponseEntity.ok(new TouremApiResponse<>(this.service.find(id), HttpStatus.OK.value()));
 	}
 
@@ -38,8 +38,8 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	 * @return returns the found element
 	 */
 	@Override
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TouremApiResponse<D>> findOne(@RequestParam Map<String, String> criteria) {
+	@GetMapping(path = "/details", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<D>> find(@RequestParam Map<String, String> criteria) {
 		return ResponseEntity.ok(new TouremApiResponse<>(this.service.find(criteria), HttpStatus.OK.value()));
 	}
 
@@ -60,8 +60,9 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	 * @return returns the newly updated resource
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<D>> patch(D data) {
-		return null;
+	@PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<D>> patch(@RequestBody D data) {
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.patch(data), HttpStatus.CREATED.value()));
 	}
 
 	/**
@@ -71,8 +72,9 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	 * @return returns the newly updated resource
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<D>> put(D data) {
-		return null;
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<D>> put(@RequestBody D data) {
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.put(data), HttpStatus.CREATED.value()));
 	}
 
 	/**
@@ -81,18 +83,20 @@ public abstract class AbstractTouremController<D extends TouremDto> implements T
 	 * @param id ID of the resource to be deleted
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<String>> delete(String id) {
-		return null;
+	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.FOUND)
+	public void delete(@PathVariable String id) {
+		this.service.delete(id);
 	}
 
 	/**
 	 * Find many elements by criteria
-	 *
 	 * @param criteria Criteria of the resources to be found
 	 * @return returns one or many pages
 	 */
 	@Override
-	public ResponseEntity<TouremApiResponse<Page<D>>> findAll(Map<String, String> criteria) {
-		return null;
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TouremApiResponse<Page<D>>> findAll(@RequestParam Map<String, String> criteria) {
+		return ResponseEntity.ok(new TouremApiResponse<>(this.service.findAll(criteria), HttpStatus.FOUND.value()));
 	}
 }

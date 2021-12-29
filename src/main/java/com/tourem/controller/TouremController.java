@@ -13,14 +13,14 @@ public interface TouremController<D extends TouremDto> {
 	 * @param id ID of the element to be found
 	 * @return returns the found element
 	 */
-	ResponseEntity<TouremApiResponse<D>> findById(String id);
+	ResponseEntity<TouremApiResponse<D>> find(String id);
 
 	/**
 	 * Find one element using different criteria other than resource ID
 	 * @param criteria request criteria to be found
 	 * @return returns the found element
 	 */
-	ResponseEntity<TouremApiResponse<D>> findOne(Map<String, String> criteria);
+	ResponseEntity<TouremApiResponse<D>> find(Map<String, String> criteria);
 
 	/**
 	 * Create a new resource
@@ -47,7 +47,7 @@ public interface TouremController<D extends TouremDto> {
 	 * Delete a resource by its ID
 	 * @param id ID of the resource to be deleted
 	 */
-	ResponseEntity<TouremApiResponse<String>> delete(String id);
+	void delete(String id);
 
 	/**
 	 * Find many elements by criteria

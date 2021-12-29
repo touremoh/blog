@@ -51,7 +51,7 @@ public interface TouremService<D extends TouremDto> {
 	 * Delete a resource by its ID
 	 * @param id ID of the resource to be deleted
 	 */
-	boolean delete(String id);
+	void delete(String id);
 
 	/**
 	 * Find many elements by criteria

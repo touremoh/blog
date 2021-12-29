@@ -210,7 +210,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @param id ID of the resource to be deleted
 	 */
 	@Override
-	public boolean delete(String id) {
+	public void delete(String id) {
 		// check if ID exists before delete
 		if (!this.repository.existsById(id)) {
 			log.debug("Trying to remove a resource with an invalid ID: [{}]", id);
@@ -225,9 +225,6 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 			log.debug("The delete operation was not successful for resource with ID: [{}]", id);
 			throw new IllegalArgumentException(String.format("An error occurred during delete operation - Resource [%s] not deleted", id));
 		}
-
-		// return true if the operation was successful
-		return true;
 	}
 
 	/**
