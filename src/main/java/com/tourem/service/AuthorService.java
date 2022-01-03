@@ -29,4 +29,10 @@ public class AuthorService extends AbstractTouremService<AuthorEntity, AuthorDto
 			throw new IllegalArgumentException(String.format("User password already exists [%s]", entity));
 		}
 	}
+
+	@Override
+	protected void processBeforePatch(AuthorEntity entity) {
+		super.processBeforePatch(entity);
+		this.repository.findById(entity.getId()).ifPresent(author -> patchProperties(author, entity));
+	}
 }

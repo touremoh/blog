@@ -8,12 +8,13 @@ import com.tourem.dto.TouremDto;
 import com.tourem.exceptions.ResourceNotFoundException;
 import com.tourem.mappers.TouremObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 public abstract class AbstractTouremService<E extends TouremEntity, D extends TouremDto> implements TouremService<D> {
@@ -229,7 +230,6 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	/**
 	 * Find many elements by criteria
-	 *
 	 * @param criteria Criteria of the resources to be found
 	 * @return returns one or many pages
 	 */
@@ -263,6 +263,19 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 			}
 			return PageRequest.ofSize(Integer.parseInt(size));
 		}
-		return null;
+		return PageRequest.ofSize((int)this.repository.count());
+	}
+
+	public void patchProperties(E source, E target) {
+		final var wTarget = new BeanWrapperImpl(target);
+
+		List<String> ignoredProperties = new ArrayList<>();
+
+		for (var pd : wTarget.getPropertyDescriptors()) {
+			if (Objects.nonNull(wTarget.getPropertyValue(pd.getName()))) {
+				ignoredProperties.add(pd.getName());
+			}
+		}
+		BeanUtils.copyProperties(source, target, ignoredProperties.toArray(new String[0]));
 	}
 }
