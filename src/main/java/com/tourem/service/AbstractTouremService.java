@@ -5,6 +5,7 @@ import com.tourem.dao.entities.TouremEntity;
 import com.tourem.dao.repositories.TouremRepository;
 import com.tourem.dao.specifications.TouremQueryBuilder;
 import com.tourem.dto.TouremDto;
+import com.tourem.exceptions.MissingResourceException;
 import com.tourem.exceptions.ResourceNotFoundException;
 import com.tourem.mappers.TouremObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 public abstract class AbstractTouremService<E extends TouremEntity, D extends TouremDto> implements TouremService<D> {
@@ -153,8 +157,8 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 			throw new IllegalArgumentException(String.format("The ID of the row to update is not valid [%s]", entity));
 		}
 
-		if (Objects.nonNull(entity.getDeletedAt())) {
-			log.info("Using deleteAt field on update operation [{}]", entity);
+		if (entity.hasDeletedAt()) {
+			log.debug("Using deleteAt field on update operation [{}]", entity);
 			throw new IllegalArgumentException(String.format("Field deletedAt not allowed for update operation for entity [%s]", entity));
 		}
 	}
@@ -196,6 +200,13 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	public void applyInitialCheckBeforePut(E entity) {
 		log.info("Validation of [{}] before PUT", entity);
+
+		this.applyInitialCheckBeforePatch(entity);
+
+		if (!entity.hasCreatedAt()) {
+			log.debug("Not using createdAt field on PUT operation [{}]", entity);
+			throw new MissingResourceException(String.format("Field createdAt is mandatory for PUT operation on entity [%s]", entity));
+		}
 	}
 
 	protected void processBeforePut(E entity) {

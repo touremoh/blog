@@ -47,4 +47,28 @@ public interface TouremObject extends Serializable {
     default boolean hasId() {
         return nonNull(this.getId());
     }
+
+    /**
+     * Tells if an entity has a createdAt
+     * @return true if create date exists
+     */
+    default boolean hasCreatedAt() {
+        return nonNull(this.getCreatedAt());
+    }
+
+    /**
+     * Tells if an entity has a updatedAt
+     * @return true if updatedAt date exists
+     */
+    default boolean hasUpdatedAt() {
+        return nonNull(this.getUpdatedAt());
+    }
+
+    /**
+     * Tells if an entity has deletedAt
+     * @return true if deletedAt date exists
+     */
+    default boolean hasDeletedAt() {
+        return nonNull(this.getDeletedAt());
+    }
 }
