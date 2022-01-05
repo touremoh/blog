@@ -8,6 +8,7 @@ import com.tourem.dto.TouremDto;
 import com.tourem.exceptions.MissingResourceException;
 import com.tourem.exceptions.ResourceNotFoundException;
 import com.tourem.mappers.TouremObjectMapper;
+import com.tourem.validation.TouremValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
@@ -26,11 +27,13 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	protected final TouremRepository<E> repository;
 	protected final TouremObjectMapper<E, D> mapper;
 	protected final TouremQueryBuilder<E> queryBuilder;
+	protected final TouremValidation<E> validator;
 
-	protected AbstractTouremService(TouremRepository<E> repository, TouremObjectMapper<E, D> mapper, TouremQueryBuilder<E> queryBuilder) {
+	protected AbstractTouremService(TouremRepository<E> repository, TouremObjectMapper<E, D> mapper, TouremQueryBuilder<E> queryBuilder, TouremValidation<E> validator) {
 		this.repository = repository;
 		this.mapper = mapper;
 		this.queryBuilder = queryBuilder;
+		this.validator = validator;
 	}
 
 	/**
@@ -87,6 +90,13 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	protected void applyPrePersistValidation(E entity) {
 		log.info("Pre persist validation of [{}]", entity);
+
+		var vResults = this.validator.validate(entity);
+
+		if (!vResults.isEmpty()) {
+			log.debug("Entity [{}] validation failed with message: [{}]", entity, vResults);
+			throw new IllegalArgumentException(String.format("Entity [%s] validation failed with message: [%s]", entity, vResults));
+		}
 
 		if (entity.hasId()) {
 			log.debug("Field id not allowed for create operation for object: [{}]", entity);
@@ -147,6 +157,13 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	public void applyInitialCheckBeforePatch(E entity) {
 		log.info("Validation of [{}] before PATCH", entity);
 
+		var vResults = this.validator.validate(entity);
+
+		if (!vResults.isEmpty()) {
+			log.debug("Entity [{}] validation failed with message: [{}]", entity, vResults);
+			throw new IllegalArgumentException(String.format("Entity [%s] validation failed with message: [%s]", entity, vResults));
+		}
+
 		if (!entity.hasId()) {
 			log.debug("The ID of the object to update is missing - [{}]", entity);
 			throw new IllegalArgumentException(String.format("The ID is mandatory for update operation: [%s]", entity));
@@ -165,6 +182,9 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	protected void processBeforePatch(E entity) {
 		log.info("Pre processing entity before patch: [{}]", entity);
+		this.repository
+			.findById(entity.getId())
+			.ifPresent(source -> patchProperties(source, entity));
 	}
 
 	protected void processAfterPatch(E entity) {

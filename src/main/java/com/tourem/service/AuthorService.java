@@ -5,6 +5,7 @@ import com.tourem.dao.repositories.AuthorRepository;
 import com.tourem.dao.specifications.AuthorQueryBuilder;
 import com.tourem.dto.AuthorDto;
 import com.tourem.mappers.AuthorMapper;
+import com.tourem.validation.TouremValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class AuthorService extends AbstractTouremService<AuthorEntity, AuthorDto> {
-	protected AuthorService(AuthorRepository repository, AuthorMapper mapper, AuthorQueryBuilder queryBuilder) {
-		super(repository, mapper, queryBuilder);
+	protected AuthorService(AuthorRepository repository, AuthorMapper mapper, AuthorQueryBuilder queryBuilder, TouremValidation<AuthorEntity> validator) {
+		super(repository, mapper, queryBuilder, validator);
 	}
 
 	@Override
@@ -28,11 +29,5 @@ public class AuthorService extends AbstractTouremService<AuthorEntity, AuthorDto
 			log.debug("User password exists [{}]", entity);
 			throw new IllegalArgumentException(String.format("User password already exists [%s]", entity));
 		}
-	}
-
-	@Override
-	protected void processBeforePatch(AuthorEntity entity) {
-		super.processBeforePatch(entity);
-		this.repository.findById(entity.getId()).ifPresent(author -> patchProperties(author, entity));
 	}
 }

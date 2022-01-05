@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.sql.Clob;
 import java.time.LocalDateTime;
@@ -27,10 +28,12 @@ public class ArticleEntity implements TouremEntity {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @NotEmpty(message = "The article title is mandatory")
     @Column(name = "title")
     private String title;
 
     @Lob
+    @NotEmpty(message = "The article content is mandatory")
     @Column(name = "payload")
     private Clob payload;
 

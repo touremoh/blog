@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serial;
 import java.time.LocalDateTime;
 
@@ -26,6 +27,7 @@ public class ImageUrlEntity implements TouremEntity {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @NotEmpty(message = "The url is mandatory")
     @Column(name = "url")
     private String url;
 
