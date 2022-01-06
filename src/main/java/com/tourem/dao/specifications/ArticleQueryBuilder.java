@@ -23,10 +23,10 @@ public class ArticleQueryBuilder implements TouremQueryBuilder<ArticleEntity> {
 
 	@Override
 	public Specification<ArticleEntity> buildQuerySpecification(Map<String, String> params) {
-		var createdFrom =  LocalDateTime.parse(params.get(CREATED_FROM));
-		var createdTo =  LocalDateTime.parse(params.get(CREATED_TO));
-		var updatedFrom = LocalDateTime.parse(params.get(UPDATED_FROM));
-		var updatedTo = LocalDateTime.parse(params.get(UPDATED_TO));
+		var createdFrom =  params.containsKey(CREATED_FROM) ? LocalDateTime.parse(params.get(CREATED_FROM)) : null;
+		var createdTo =  params.containsKey(CREATED_TO) ? LocalDateTime.parse(params.get(CREATED_TO)) : null;
+		var updatedFrom = params.containsKey(UPDATED_FROM) ? LocalDateTime.parse(params.get(UPDATED_FROM)) : null;
+		var updatedTo = params.containsKey(UPDATED_TO) ? LocalDateTime.parse(params.get(UPDATED_TO)) : null;
 
 		return Specification
 				.where(containsExpression(TITLE, params.get(TITLE)))

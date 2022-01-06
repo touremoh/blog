@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serial;
 import java.sql.Clob;
 import java.time.LocalDateTime;
@@ -33,12 +34,13 @@ public class ArticleEntity implements TouremEntity {
     private String title;
 
     @Lob
-    @NotEmpty(message = "The article content is mandatory")
+    @NotNull(message = "The article content is mandatory")
     @Column(name = "payload")
     private Clob payload;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
+    @NotNull(message = "The author is mandatory")
     private AuthorEntity author;
 
     @Column(name = "created_at")

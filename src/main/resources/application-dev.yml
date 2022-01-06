@@ -8,6 +8,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/tourem
     username: tourem
     password:
+  jpa:
+    show-sql: true
 
 logging:
   level:

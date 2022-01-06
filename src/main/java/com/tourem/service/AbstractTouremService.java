@@ -5,7 +5,6 @@ import com.tourem.dao.entities.TouremEntity;
 import com.tourem.dao.repositories.TouremRepository;
 import com.tourem.dao.specifications.TouremQueryBuilder;
 import com.tourem.dto.TouremDto;
-import com.tourem.exceptions.MissingResourceException;
 import com.tourem.exceptions.ResourceNotFoundException;
 import com.tourem.mappers.TouremObjectMapper;
 import com.tourem.validation.TouremValidation;
@@ -15,6 +14,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the found element
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public D find(String id) {
 		return this.repository
 				   .findById(id)
@@ -55,6 +56,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the found element
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public D find(Map<String, String> criteria) {
 		return this.repository
 				   .findOne(this.queryBuilder.buildQuerySpecification(criteria))
@@ -68,6 +70,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the new resource created
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public D create(D data) {
 		// map to entity
 		E e = mapper.mapToEntity(data);
@@ -134,6 +137,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the newly updated resource
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public D patch(D data) {
 		// map to entity
 		E e = this.mapper.mapToEntity(data);
@@ -156,13 +160,6 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	public void applyInitialCheckBeforePatch(E entity) {
 		log.info("Validation of [{}] before PATCH", entity);
-
-		var vResults = this.validator.validate(entity);
-
-		if (!vResults.isEmpty()) {
-			log.debug("Entity [{}] validation failed with message: [{}]", entity, vResults);
-			throw new IllegalArgumentException(String.format("Entity [%s] validation failed with message: [%s]", entity, vResults));
-		}
 
 		if (!entity.hasId()) {
 			log.debug("The ID of the object to update is missing - [{}]", entity);
@@ -198,6 +195,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the newly updated resource
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public D put(D data) {
 		// map to entity
 		E e = this.mapper.mapToEntity(data);
@@ -223,14 +221,17 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 		this.applyInitialCheckBeforePatch(entity);
 
-		if (!entity.hasCreatedAt()) {
-			log.debug("Not using createdAt field on PUT operation [{}]", entity);
-			throw new MissingResourceException(String.format("Field createdAt is mandatory for PUT operation on entity [%s]", entity));
+		var vResults = this.validator.validate(entity);
+
+		if (!vResults.isEmpty()) {
+			log.debug("Entity [{}] validation failed with message: [{}]", entity, vResults);
+			throw new IllegalArgumentException(String.format("Entity [%s] validation failed with message: [%s]", entity, vResults));
 		}
 	}
 
 	protected void processBeforePut(E entity) {
 		log.info("Pre processing entity before put: [{}]", entity);
+		this.repository.findById(entity.getId()).ifPresent(e -> entity.setCreatedAt(e.getCreatedAt()));
 	}
 
 	protected void processAfterPut(E entity) {
@@ -265,12 +266,14 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns one or many pages
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Page<D> findAll(Map<String, String> criteria) {
 		// build page request
 		var req = processBeforeFindAll(criteria);
 
 		// build query criteria
 		var querySpec = this.queryBuilder.buildQuerySpecification(criteria);
+
 
 		// run query and process results
 		return this.repository.findAll(querySpec, req).map(mapper::mapToDto);
@@ -294,7 +297,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 			}
 			return PageRequest.ofSize(Integer.parseInt(size));
 		}
-		return PageRequest.ofSize((int)this.repository.count());
+		return PageRequest.ofSize(50);
 	}
 
 	public void patchProperties(E source, E target) {

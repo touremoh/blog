@@ -37,7 +37,10 @@ public interface TouremQueryBuilder<E extends TouremEntity> extends Serializable
 		if (Objects.nonNull(from)) {
 			return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get(fieldName), from);
 		}
-		return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(fieldName), to);
+		if (Objects.nonNull(to)) {
+			return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get(fieldName), to);
+		}
+		return null;
 	}
 
 	default Specification<E> expressionEquals(String fieldName, String expression) {
