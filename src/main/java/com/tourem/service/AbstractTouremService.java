@@ -181,7 +181,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 		log.info("Pre processing entity before patch: [{}]", entity);
 		this.repository
 			.findById(entity.getId())
-			.ifPresent(source -> patchProperties(source, entity));
+			.ifPresent(source -> mergeSourceToTarget(source, entity));
 	}
 
 	protected void processAfterPatch(E entity) {
@@ -300,7 +300,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 		return PageRequest.ofSize(50);
 	}
 
-	public void patchProperties(E source, E target) {
+	public void mergeSourceToTarget(E source, E target) {
 		final var wTarget = new BeanWrapperImpl(target);
 
 		List<String> ignoredProperties = new ArrayList<>();
