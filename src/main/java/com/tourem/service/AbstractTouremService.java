@@ -123,11 +123,11 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	}
 
 	protected void processBeforeCreate(E entity) {
-		log.info("Pre processing entity before create: [{}]", entity);
+		log.info("Processing entity before create: [{}]", entity);
 	}
 
 	protected void processAfterCreate(E entity) {
-		log.info("Pre processing entity after create: [{}]", entity);
+		log.info("Processing entity after create: [{}]", entity);
 	}
 
 	/**
