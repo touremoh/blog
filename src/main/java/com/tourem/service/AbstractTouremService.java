@@ -5,6 +5,7 @@ import com.tourem.dao.entities.TouremEntity;
 import com.tourem.dao.repositories.TouremRepository;
 import com.tourem.dao.specifications.TouremQueryBuilder;
 import com.tourem.dto.TouremDto;
+import com.tourem.exceptions.ResourceCreationFailedException;
 import com.tourem.exceptions.ResourceNotFoundException;
 import com.tourem.mappers.TouremObjectMapper;
 import com.tourem.validation.TouremValidation;
@@ -16,10 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 public abstract class AbstractTouremService<E extends TouremEntity, D extends TouremDto> implements TouremService<D> {
@@ -128,6 +128,16 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 
 	protected void processAfterCreate(E entity) {
 		log.info("Processing entity after create: [{}]", entity);
+
+		// check if entity has been persisted
+		try {
+			ofNullable(this.find(entity.getId()))
+				.ifPresent(e -> log.info(String.format("Resource successfully persisted in DB [%s]", e)));
+
+		} catch (Exception e) {
+			log.debug(String.format("Unable to persisted resource in DB in DB [%s]", entity));
+			throw new ResourceCreationFailedException(String.format("Resource created but not persisted in DB [%s]", entity));
+		}
 	}
 
 	/**

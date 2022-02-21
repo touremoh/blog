@@ -1,6 +1,14 @@
 package com.tourem.exceptions;
 
-public class MissingResourceException extends RuntimeException {
+public class ResourceCreationFailedException extends RuntimeException {
+	/**
+	 * Constructs a new runtime exception with {@code null} as its
+	 * detail message.  The cause is not initialized, and may subsequently be
+	 * initialized by a call to {@link #initCause}.
+	 */
+	public ResourceCreationFailedException() {
+	}
+
 	/**
 	 * Constructs a new runtime exception with the specified detail message.
 	 * The cause is not initialized, and may subsequently be initialized by a
@@ -9,7 +17,7 @@ public class MissingResourceException extends RuntimeException {
 	 * @param message the detail message. The detail message is saved for
 	 *                later retrieval by the {@link #getMessage()} method.
 	 */
-	public MissingResourceException(String message) {
+	public ResourceCreationFailedException(String message) {
 		super(message);
 	}
 
@@ -27,7 +35,7 @@ public class MissingResourceException extends RuntimeException {
 	 *                unknown.)
 	 * @since 1.4
 	 */
-	public MissingResourceException(String message, Throwable cause) {
+	public ResourceCreationFailedException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -44,7 +52,7 @@ public class MissingResourceException extends RuntimeException {
 	 *              unknown.)
 	 * @since 1.4
 	 */
-	public MissingResourceException(Throwable cause) {
+	public ResourceCreationFailedException(Throwable cause) {
 		super(cause);
 	}
 
@@ -62,7 +70,7 @@ public class MissingResourceException extends RuntimeException {
 	 *                           be writable
 	 * @since 1.7
 	 */
-	public MissingResourceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public ResourceCreationFailedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

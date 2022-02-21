@@ -27,6 +27,11 @@ public class TouremExceptionHandler extends ResponseEntityExceptionHandler {
 		return createResponse(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 	}
 
+	@ExceptionHandler(value = {ResourceCreationFailedException.class})
+	protected ResponseEntity<Object> handleCreationFailedException(Exception e) {
+		return createResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	@ExceptionHandler(value = {Exception.class})
 	protected ResponseEntity<Object> handleGeneralException(Exception e) {
 		return createResponse(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
