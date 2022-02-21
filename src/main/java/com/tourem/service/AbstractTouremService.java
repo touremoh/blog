@@ -70,7 +70,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the new resource created
 	 */
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public D create(D data) {
 		// map to entity
 		E e = mapper.mapToEntity(data);
@@ -147,7 +147,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the newly updated resource
 	 */
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public D patch(D data) {
 		// map to entity
 		E e = this.mapper.mapToEntity(data);
@@ -188,14 +188,14 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	}
 
 	protected void processBeforePatch(E entity) {
-		log.info("Pre processing entity before patch: [{}]", entity);
+		log.info("Processing entity before patch: [{}]", entity);
 		this.repository
 			.findById(entity.getId())
 			.ifPresent(source -> mergeSourceToTarget(source, entity));
 	}
 
 	protected void processAfterPatch(E entity) {
-		log.info("Pre processing entity after patch: [{}]", entity);
+		log.info("Processing entity after patch: [{}]", entity);
 	}
 
 	/**
@@ -205,7 +205,7 @@ public abstract class AbstractTouremService<E extends TouremEntity, D extends To
 	 * @return returns the newly updated resource
 	 */
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public D put(D data) {
 		// map to entity
 		E e = this.mapper.mapToEntity(data);
