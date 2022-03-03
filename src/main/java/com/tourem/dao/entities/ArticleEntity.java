@@ -10,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serial;
-import java.sql.Clob;
 import java.time.LocalDateTime;
 
 @Data
@@ -33,10 +32,9 @@ public class ArticleEntity implements TouremEntity {
     @Column(name = "title")
     private String title;
 
-    @Lob
     @NotNull(message = "The article content is mandatory")
-    @Column(name = "payload")
-    private Clob payload;
+    @Column(name = "payload", columnDefinition = "TEXT")
+    private String payload;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
