@@ -15,4 +15,6 @@ public class ArticleService extends AbstractTouremService<ArticleEntity, Article
 	protected ArticleService(ArticleRepository repository, ArticleMapper mapper, ArticleQueryBuilder queryBuilder, TouremValidation<ArticleEntity> validator) {
 		super(repository, mapper, queryBuilder, validator);
 	}
+
+
 }
