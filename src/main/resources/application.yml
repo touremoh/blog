@@ -16,5 +16,3 @@ logging:
     com:
       tourem: DEBUG
     root: INFO
-
-cors-origin: ${CORS_ORIGIN_URL}
