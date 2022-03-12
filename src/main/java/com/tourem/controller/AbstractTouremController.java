@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Slf4j
-@CrossOrigin(origins = "*")
 public abstract class AbstractTouremController<D extends TouremDto> implements TouremController<D> {
 
 	protected final TouremService<D> service;
